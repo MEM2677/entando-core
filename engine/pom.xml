@@ -21,6 +21,18 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
+    <developers>
+        <developer>
+            <id>e.santoboni</id>
+            <name>Eugenio Santoboni</name>
+            <email>eugenio.santoboni@gmail.com</email>
+        </developer>
+        <developer>
+            <id>w.ghelfi</id>
+            <name>William Ghelfi</name>
+            <email>william@williamghelfi.com</email>
+        </developer>
+    </developers>
     <organization>
         <name>Entando Inc.</name>
         <url>http://www.entando.com/</url>
@@ -299,7 +311,7 @@
             <version>2.13.0</version>
             <scope>test</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>de.mkammerer</groupId>
             <artifactId>argon2-jvm</artifactId>
@@ -314,12 +326,23 @@
             <scope>test</scope>
         </dependency>
 		
+		<dependency>
+			<groupId>com.jayway.jsonpath</groupId>
+			<artifactId>json-path-assert</artifactId>
+			<version>2.2.0</version>
+			<scope>test</scope>
+		</dependency>
+        <!-- SpringFox Swagger UI -->
         <dependency>
-            <groupId>com.jayway.jsonpath</groupId>
-            <artifactId>json-path-assert</artifactId>
-            <version>2.2.0</version>
-            <scope>test</scope>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>2.8.0</version>
         </dependency>
-        
+
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>2.8.0</version>
+        </dependency>
     </dependencies>
 </project>
