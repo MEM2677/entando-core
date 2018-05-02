@@ -39,6 +39,7 @@ import com.agiletec.aps.system.services.pagemodel.IPageModelManager;
 import com.agiletec.aps.system.services.pagemodel.PageModel;
 import com.agiletec.aps.system.services.pagemodel.PageModelUtilizer;
 import com.agiletec.aps.util.ApsProperties;
+import java.util.stream.Collectors;
 import org.apache.commons.beanutils.BeanComparator;
 import org.apache.commons.lang3.StringUtils;
 import org.entando.entando.aps.system.exception.RestRourceNotFoundException;
@@ -621,6 +622,29 @@ public class PageService implements IPageService, GroupServiceUtilizer<PageDto>,
             logger.error("Error searching pages with token {}", request.getPageCodeToken(), ex);
             throw new RestServerError("Error searching pages", ex);
         }
+    }
+    
+    @Override
+    public PagedMetadata<PageDto> getPageList(PageSearchRequest request, List<String> allowedGroups) {
+        try {
+            List<IPage> rawPages = this.getPageManager().searchPages(request.getPageCodeToken(), allowedGroups);
+            List<PageDto> pages = this.getDtoBuilder().convert(rawPages);
+            pages.forEach(page -> {
+                int count = countWidgets(this.getPageManager().getDraftPage(page.getCode()));
+                page.setNumWidgets(count);
+            });
+            return this.getPagedResult(request, pages);
+        } catch (ApsSystemException ex) {
+            logger.error("Error searching pages with token {}", request.getPageCodeToken(), ex);
+            throw new RestServerError("Error searching pages", ex);
+        }
+    }
+    
+    private int countWidgets(IPage page) {
+        return Arrays.asList(page.getWidgets()).stream()
+                .filter(widget -> widget != null)
+                .collect(Collectors.toList())
+                .size();
     }
     
     @Override

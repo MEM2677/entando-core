@@ -50,6 +50,8 @@ public interface IPageService {
 
     public PagedMetadata<PageDto> searchPages(PageSearchRequest request, List<String> allowedGroups);
 
+    public PagedMetadata<PageDto> getPageList(PageSearchRequest request, List<String> allowedGroups);
+
     /**
      * Search against online pages
      *

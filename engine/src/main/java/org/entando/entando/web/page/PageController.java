@@ -294,4 +294,14 @@ public class PageController {
         return new ResponseEntity<>(new RestResponse(result, new ArrayList<>(), metadata), HttpStatus.OK);
     }
 
+    @RestAccessControl(permission = Permission.MANAGE_PAGES)
+    @RequestMapping(value = "/pages/dashboard/list", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RestResponse> getPageList(@ModelAttribute("user") UserDetails user, PageSearchRequest searchRequest) {
+        logger.debug("getting page list with request {}", searchRequest);
+        this.getPageValidator().validateRestListRequest(searchRequest, PageDto.class);
+        List<String> groups = this.getAuthorizationService().getAllowedGroupCodes(user);
+        PagedMetadata<PageDto> result = this.getPageService().getPageList(searchRequest, groups);
+        return new ResponseEntity<>(new RestResponse(result.getBody(), new ArrayList<>(), result), HttpStatus.OK);
+    }
+
 }

@@ -47,11 +47,13 @@ public class PageDto {
     private List<String> joinGroups = new ArrayList<>();
     private List<String> children = new ArrayList<>();
     private int position;
+    private int numWidgets;
 
     /**
      * The references grouped by service name.
      * <p>
-     * Lists all the managers that may contain references by indicating with <code>true</code> the presence of references
+     * Lists all the managers that may contain references by indicating with
+     * <code>true</code> the presence of references
      */
     @JsonInclude(Include.NON_NULL)
     private Map<String, Boolean> references;
@@ -81,6 +83,7 @@ public class PageDto {
         Optional.ofNullable(page.getChildrenCodes()).
                 ifPresent(values -> Arrays.asList(values).forEach((child) -> this.children.add(child)));
         this.setPosition(page.getPosition());
+        this.setNumWidgets(page.getWidgets() != null ? page.getWidgets().length : 0);
     }
 
     public String getCode() {
@@ -201,6 +204,14 @@ public class PageDto {
 
     public void setPosition(int position) {
         this.position = position;
+    }
+
+    public int getNumWidgets() {
+        return numWidgets;
+    }
+
+    public void setNumWidgets(int numWidgets) {
+        this.numWidgets = numWidgets;
     }
 
     public static String getEntityFieldName(String dtoFieldName) {
