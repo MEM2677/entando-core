@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -69,7 +70,7 @@ public class GroupController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse> getGroups(RestListRequest requestList) throws JsonProcessingException {
+    public ResponseEntity<RestResponse<List<GroupDto>>> getGroups(RestListRequest requestList) throws JsonProcessingException {
         this.getGroupValidator().validateRestListRequest(requestList, GroupDto.class);
         PagedMetadata<GroupDto> result = this.getGroupService().getGroups(requestList);
         this.getGroupValidator().validateRestListResult(requestList, result);
@@ -79,21 +80,21 @@ public class GroupController {
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/{groupCode}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse> getGroup(@PathVariable String groupCode) {
+    public ResponseEntity<RestResponse<GroupDto>> getGroup(@PathVariable String groupCode) {
         GroupDto group = this.getGroupService().getGroup(groupCode);
         return new ResponseEntity<>(new RestResponse(group), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/{groupCode}/references/{holder}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getGroupReferences(@PathVariable String groupCode, @PathVariable String holder, RestListRequest requestList) {
+    public ResponseEntity<RestResponse<?>> getGroupReferences(@PathVariable String groupCode, @PathVariable String holder, RestListRequest requestList) {
         PagedMetadata<?> result = this.getGroupService().getGroupReferences(groupCode, holder, requestList);
         return new ResponseEntity<>(new RestResponse(result.getBody(), null, result), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)
     @RequestMapping(value = "/{groupCode}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RestResponse> updateGroup(@PathVariable String groupCode, @Valid @RequestBody GroupRequest groupRequest, BindingResult bindingResult) {
+    public ResponseEntity<RestResponse<GroupDto>> updateGroup(@PathVariable String groupCode, @Valid @RequestBody GroupRequest groupRequest, BindingResult bindingResult) {
         //field validations
         if (bindingResult.hasErrors()) {
             throw new ValidationGenericException(bindingResult);
@@ -120,7 +121,7 @@ public class GroupController {
             throw new ValidationConflictException(bindingResult);
         }
         GroupDto dto = this.getGroupService().addGroup(groupRequest);
-        return new ResponseEntity<>(new RestResponse(dto), HttpStatus.OK);
+        return new ResponseEntity<>(new RestResponse<>(dto), HttpStatus.OK);
     }
 
     @RestAccessControl(permission = Permission.SUPERUSER)

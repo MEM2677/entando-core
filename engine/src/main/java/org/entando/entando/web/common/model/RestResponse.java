@@ -42,7 +42,11 @@ public class RestResponse<T> {
         }
     }
 
-    public Object getPayload() {
+    public T getPayload() {
+
+        if(payload == null) {
+            return (T)new ArrayList<>();
+        }
         return payload;
     }
 
